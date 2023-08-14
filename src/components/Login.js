@@ -1,29 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-
-import { login } from '../actions/Login';
-import { useDispatch } from "react-redux";
+import { connect } from 'react-redux'; 
+import { login }  from '../actions/auth';
 import LoginForm from "./LoginForm";
 import { SubmissionError } from 'redux-form';
 
-export const Login = () => {
+const Login = ({ login }) => { 
     const navigate = useNavigate();
-    const dispatch = useDispatch(); 
-
-    const handleSubmit = async (values) => {
-        try {
-            const response = await dispatch(login({ email: values.email, password: values.password }));
-            
-            if (!(response && response.token)) {
+    
+    const handleSubmit = (values) => {
+        return login({ email: values.email, password: values.password })
+            .then(response => {
+                if (!(response && response.token)) {
+                    throw new SubmissionError({
+                        _error: 'Invalid email or password'
+                    });
+                }
+                
+                navigate("/dashboard");
+            })
+            .catch(error => {
                 throw new SubmissionError({
-                    _error: 'Invalid email or password'
+                    _error: 'Email or Password is not correct!'
                 });
-            }
-        } catch (error) {
-            throw new SubmissionError({
-                _error: 'Email or Password is not correct!'
             });
-        }
     };
 
     return (
@@ -37,4 +37,6 @@ export const Login = () => {
     );
 };
 
-export default Login;
+const mapActionsToProps = { login }; 
+
+export default connect(null, mapActionsToProps)(Login);

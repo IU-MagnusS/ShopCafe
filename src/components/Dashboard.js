@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../reducers/auth"; 
+import { logout } from "../actions/auth"; 
 
 export const Dashboard = () => {
     const dispatch = useDispatch();

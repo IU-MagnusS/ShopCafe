@@ -34,6 +34,7 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
 // Redux Form Component
 let LoginForm = props => {
     const { handleSubmit, error } = props; 
+    
     return (
         <form onSubmit={handleSubmit}>
             {error && <div className="error-message">{error}</div>} {/* Display the error message */}
