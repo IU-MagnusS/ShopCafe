@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { logout } from "../actions/auth"; 
 
-const Dashboard = ({ logout }) => { // Correctly destructure the logout prop
+const Dashboard = ({ logout }) => { 
 
     const navigate = useNavigate();
   
     const handleLogout = () => {
-      logout(); // Call the logout action
+      logout();
       navigate("/");
     };
   
