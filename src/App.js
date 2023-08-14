@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import { connect } from "react-redux";
 
 import  Login  from "./components/Login";
-import { Dashboard } from "./components/Dashboard";
+import  Dashboard  from "./components/Dashboard";
 
 
 const PrivateRoute = ({ element: Element, auth }) => {

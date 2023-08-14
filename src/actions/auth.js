@@ -25,6 +25,9 @@ export const login = ({ email, password }) => async dispatch => {
     }
 };
 
-export const logout = () => ({
-    type: LOGOUT
-});
+export const logout = () => async dispatch => {
+    dispatch({
+        type: LOGOUT,
+        payload: { token: null }
+    });
+};

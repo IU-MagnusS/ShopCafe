@@ -1,14 +1,14 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { connect } from 'react-redux'; 
 import { useNavigate } from "react-router-dom";
 import { logout } from "../actions/auth"; 
 
-export const Dashboard = () => {
-    const dispatch = useDispatch();
+const Dashboard = ({ logout }) => { // Correctly destructure the logout prop
+
     const navigate = useNavigate();
   
     const handleLogout = () => {
-      dispatch(logout());
+      logout(); // Call the logout action
       navigate("/");
     };
   
@@ -18,5 +18,8 @@ export const Dashboard = () => {
         <button onClick={handleLogout}>Logout</button>
       </div>
     );
-  };
+};
   
+const mapActionsToProps = { logout }; 
+
+export default connect(null, mapActionsToProps)(Dashboard);
