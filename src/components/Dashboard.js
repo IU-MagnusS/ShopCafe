@@ -4,6 +4,7 @@ import { logout } from "../actions/auth";
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { Link } from 'react-router-dom'; 
 
 const Dashboard = ({ logout }) => { 
 
@@ -43,7 +44,7 @@ const Dashboard = ({ logout }) => {
             'aria-labelledby': 'dashboard-menu-button',
           }}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem component={Link} to="/usermanagement">User Management</MenuItem>
           <MenuItem onClick={handleClose}>My account</MenuItem>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>

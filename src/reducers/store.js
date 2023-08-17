@@ -5,6 +5,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import authReducer from './auth';
+import userReducer from "./userReducer";
 
 const persistConfig = {
   key: 'root',
@@ -16,7 +17,8 @@ const persistConfig = {
 const reducer = combineReducers({
   //auth: authReducer
   authReducer,
-  form: reduxFormReducer
+  userReducer,
+  form: reduxFormReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer)
