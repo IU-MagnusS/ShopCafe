@@ -1,16 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { fetchAllUsers, updateUserStatus } from '../actions/userAction';
+import { fetchAllUsers, updateUserStatus, createUser } from '../actions/userAction';
+import CreateUser from './CreateUser';
 
-const UserManagement = ({ users, fetchAllUsers, updateUserStatus }) => {
+
+const UserManagement = ({ users, fetchAllUsers, updateUserStatus, createUser }) => {
   useEffect(() => {
     fetchAllUsers();
   }, [fetchAllUsers]);
+
+  const [popupOpen, setPopupOpen] = useState(false);
 
   const handleUpdateStatus = (id, newStatus) => {
     updateUserStatus(id, newStatus);
   };
 
+  
   return (
     <div>
       <h2>User List</h2>
@@ -42,17 +47,20 @@ const UserManagement = ({ users, fetchAllUsers, updateUserStatus }) => {
           ))}
         </tbody>
       </table>
+      <button onClick={() => setPopupOpen(true)}>Create User</button>
+      {popupOpen && <CreateUser createUser={createUser} />}
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  users: state.userReducer?.userList,
+  users: state.userReducer.userList,
 });
 
 const mapDispatchToProps = {
   fetchAllUsers,
   updateUserStatus,
+  createUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserManagement);

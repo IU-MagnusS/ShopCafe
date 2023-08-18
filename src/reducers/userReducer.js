@@ -1,3 +1,4 @@
+
 const initialState = {
   userList: [],
 };
@@ -22,6 +23,11 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         userList: updatedUserList,
+      };
+    case 'CREATE_USER_SUCCESS':
+      return {
+        ...state,
+        userList: [...state.userList, action.payload.newUser],
       };
     default:
       return state;
