@@ -1,17 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchAllUsers } from '../actions/userAction';
 
 const UserManagement = ({ users, fetchAllUsers }) => {
-  const [userList, setUserList] = useState([]);
-
   useEffect(() => {
     fetchAllUsers();
   }, []);
-
-  const handleUpdateUser = (id, newData) => {
-    fetchAllUsers();
-  };
 
   return (
     <div>
@@ -24,22 +18,16 @@ const UserManagement = ({ users, fetchAllUsers }) => {
             <th>Email</th>
             <th>Contact Number</th>
             <th>Status</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {userList && userList.map((user) => (
+          {users.map((user) => ( // map lap qua danh sach nguoi dung hien thi trong arr
             <tr key={user.id}>
               <td>{user.id}</td>
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.contactNumber}</td>
-              <td>{user.status}</td>
-              <td>
-                <button onClick={() => handleUpdateUser(user.id, { name: 'New Name' })}>
-                  Update
-                </button>
-              </td>
+              <td>{user.status ? 'Active' : 'Inactive'}</td>
             </tr>
           ))}
         </tbody>
@@ -49,7 +37,7 @@ const UserManagement = ({ users, fetchAllUsers }) => {
 };
 
 const mapStateToProps = (state) => ({
-  users: state.user?.userList,
+  users: state.userReducer?.userList,
 });
 
 const mapDispatchToProps = {
