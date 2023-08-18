@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchAllUsers } from '../actions/userAction';
+import { fetchAllUsers, updateUserStatus } from '../actions/userAction';
 
-const UserManagement = ({ users, fetchAllUsers }) => {
+const UserManagement = ({ users, fetchAllUsers, updateUserStatus }) => {
   useEffect(() => {
     fetchAllUsers();
-  }, []);
+  }, [fetchAllUsers]);
+
+  const handleUpdateStatus = (id, newStatus) => {
+    updateUserStatus(id, newStatus);
+  };
 
   return (
     <div>
@@ -18,16 +22,22 @@ const UserManagement = ({ users, fetchAllUsers }) => {
             <th>Email</th>
             <th>Contact Number</th>
             <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => ( // map lap qua danh sach nguoi dung hien thi trong arr
+          {users.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.contactNumber}</td>
-              <td>{user.status ? 'Active' : 'Inactive'}</td>
+              <td>{user.status === 'true' ? 'Active' : 'Inactive'}</td>
+              <td>
+                <button onClick={() => handleUpdateStatus(user.id, user.status === 'true' ? 'false' : 'true')}>
+                  {user.status === 'true' ? 'Deactivate' : 'Activate'}
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -42,6 +52,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   fetchAllUsers,
+  updateUserStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserManagement);

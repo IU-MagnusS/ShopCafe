@@ -21,14 +21,25 @@ export const fetchAllUsers = () => async (dispatch, getState) => {
   }
 };
 
-export const updateUser = (id, user) => async (dispatch) => {
+export const updateUserStatus = (id, newStatus) => async (dispatch, getState) => {
   try {
-    const response = await api.put(`/user/update/${id}`, user);
+    const { token } = getState().authReducer;
+    const requestBody = {
+      id: id.toString(), 
+      status: newStatus,
+    };
+    
+    const response = await api.post('/user/update', requestBody, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     if (response.data.success) {
-      dispatch(fetchAllUsers()); 
+      dispatch(fetchAllUsers());
     }
     return response.data;
   } catch (error) {
-    console.error("Error updating user:", error);
+    console.error("Error updating user status:", error);
   }
 };
