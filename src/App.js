@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import './App.css';
+
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { connect } from "react-redux";
@@ -8,6 +8,8 @@ import { connect } from "react-redux";
 import Login  from "./components/Login";
 import Dashboard  from "./components/Dashboard";
 import UserManagement from "./components/UserManagement";
+import UserList from "./components/UserList";
+import './forms/index.css'
 
 const PrivateRoute = ({ element: Element, auth }) => {
   return auth.token ? <Element /> : <Navigate to="/" />;
@@ -30,6 +32,10 @@ const App = ({ authReducer }) => {
           <Route
             path="/usermanagement" 
             element={<PrivateRoute element={UserManagement} auth={authReducer} />}
+          />
+          <Route
+            path="/data" 
+            element={<PrivateRoute element={UserList} auth={authReducer} />}
           />
         </Routes>
       </BrowserRouter>

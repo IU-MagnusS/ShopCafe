@@ -4,10 +4,15 @@ import { fetchAllUsers, updateUserStatus, createUser } from '../actions/userActi
 import CreateUser from './CreateUser';
 
 
-const UserManagement = ({ users, fetchAllUsers, updateUserStatus, createUser }) => {
+const UserManagement = ({ users, fetchAllUsers, updateUserStatus, createUser, flagSuccess }) => {
+  
   useEffect(() => {
     fetchAllUsers();
-  }, [fetchAllUsers]);
+  }, []);
+
+  useEffect(() => {
+    fetchAllUsers();
+  }, [flagSuccess]);
 
   const [popupOpen, setPopupOpen] = useState(false);
 
@@ -48,13 +53,14 @@ const UserManagement = ({ users, fetchAllUsers, updateUserStatus, createUser }) 
         </tbody>
       </table>
       <button onClick={() => setPopupOpen(true)}>Create User</button>
-      {popupOpen && <CreateUser createUser={createUser} />}
+      {popupOpen && !flagSuccess && <CreateUser />}
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
   users: state.userReducer.userList,
+  flagSuccess: state.userReducer.flagSuccess,
 });
 
 const mapDispatchToProps = {

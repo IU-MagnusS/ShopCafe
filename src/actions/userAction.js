@@ -2,11 +2,6 @@ import api from './api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const setUserList = (userList) => ({
-  type: 'SET_USER_LIST',
-  payload: userList,
-});
-
 export const fetchAllUsers = () => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
@@ -17,18 +12,25 @@ export const fetchAllUsers = () => async (dispatch, getState) => {
       },
     });
     console.log(response.data)
-    dispatch(setUserList(response.data));
+    dispatch({
+      type: 'SET_USER_LIST',
+      payload: response.data,
+    });
+    return response.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
 };
 
-export const updateUserStatus = (id, newStatus) => async (dispatch, getState) => {
+export const updateUserStatus = (id, newStatus, newName, newEmail, newcontactNumber) => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
     const requestBody = {
       id: id.toString(),
       status: newStatus,
+      name: newName,
+      email: newEmail,
+      contactNumber: newcontactNumber,
     };
 
     const response = await api.post('/user/update', requestBody, {
@@ -38,10 +40,18 @@ export const updateUserStatus = (id, newStatus) => async (dispatch, getState) =>
     });
 
     if (response.status === 200) {
-      setTimeout(() => {
-        dispatch(fetchAllUsers());
-        toast.success('User status updated successfully');
-      }, 1000);
+      dispatch({
+        type: "UPDATE_USER_STATUS",
+        payload: {
+          id,
+          newStatus,
+          newName,
+          newEmail,
+          newcontactNumber,
+        }
+      });
+      toast.success('User status updated successfully');
+      dispatch(fetchAllUsers());
     } else {
       toast.error('Failed to update user status');
     }
@@ -62,17 +72,20 @@ export const createUser = (userData) => async (dispatch, getState) => {
       },
     });
 
-    if (response.data.success) {
-      setTimeout(() => {
-        dispatch(fetchAllUsers());
-        toast.success('User created successfully');
-      }, 2000); 
+    if (response.status === 200) {
+      dispatch({
+        type: "CREATE_USER_SUCCESS",
+        payload: response.data
+      });
+      toast.success('User created successfully');
+      dispatch(fetchAllUsers());
+      
     } else {
       toast.error('Failed to create user');
+    
     }
     return response.data;
   } catch (error) {
-    console.error("Error creating user:", error);
     toast.error('An error occurred while creating user');
   }
 };

@@ -15,7 +15,10 @@ const userReducer = (state = initialState, action) => {
         if (user.id === action.payload.id) {
           return {
             ...user,
-            status: action.payload.newStatus
+            status: action.payload.newStatus,
+            name: action.payload.newName, 
+            email: action.payload.newEmail, 
+            contactNumber: action.payload.newcontactNumber,
           };
         }
         return user;
@@ -29,6 +32,8 @@ const userReducer = (state = initialState, action) => {
         ...state,
         userList: [...state.userList, action.payload.newUser],
       };
+
+
     default:
       return state;
   }

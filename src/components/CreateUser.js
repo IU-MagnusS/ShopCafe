@@ -1,47 +1,58 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { fetchAllUsers, updateUserStatus, createUser } from '../actions/userAction';
 
-const CreateUser = ({ createUser }) => {
-  const [name, setName] = useState('');
-  const [contactNumber, setContactNumber] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
+const CreateUser = ({ createUser , flagSuccess}) => {
+  const [objCreate, setObjCreate] = useState({})
+
 
   const handleSubmit = () => {
+    if (flagSuccess) {
+      return
+    }
     const newUser = {
-      name,
-      contactNumber,
-      email,
-      password,
+      name: objCreate.name,
+      contactNumber: objCreate.contactNumber,
+      email: objCreate.email,
+      password:objCreate.password,
       status: 'false',
       role: 'user',
     };
     createUser(newUser);
-    setName('');
-    setContactNumber('');
-    setEmail('');
-    setPassword('');
   };
 
+  const handleChangeInput = (nameInput, value) => {
+    setObjCreate({...objCreate, [nameInput] : value})
+  }
   return (
     <div>
       <h2>Create User</h2>
       <form onSubmit={handleSubmit}>
         <label>Name:</label>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+        <input type="text" value={objCreate.name} onChange={(e) => handleChangeInput("name", e.target.value)} />
 
         <label>Contact Number:</label>
-        <input type="text" value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} />
+        <input type="text" value={objCreate.contactNumber} onChange={(e) => handleChangeInput("contactNumber", e.target.value)} />
 
         <label>Email:</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="email" value={objCreate.email} onChange={(e) => handleChangeInput("email", e.target.value)} />
 
         <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input type="password" value={objCreate.password} onChange={(e) => handleChangeInput("password", e.target.value)}  />
 
-        <button type="submit">Create User</button>
+        <button type="submit" onClick={handleSubmit}>Create User</button>
       </form>
     </div>
   );
 };
+const mapStateToProps = (state) => ({
+  users: state.userReducer.userList,
+  flagSuccess: state.userReducer.flagSuccess,
+});
 
-export default CreateUser;
+const mapDispatchToProps = {
+  createUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateUser);
