@@ -12,28 +12,23 @@ export const fetchAllUsers = () => async (dispatch, getState) => {
       },
     });
     console.log(response.data)
-    dispatch({
-      type: 'SET_USER_LIST',
-      payload: response.data,
-    });
-    return response.data;
+    if (response.status === 200) {
+      dispatch({
+        type: 'SET_USER_LIST',
+        payload: response.data,
+      });
+    }
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    console.error('Error fetching user data:', error);
   }
 };
 
-export const updateUserStatus = (id, newStatus, newName, newEmail, newcontactNumber) => async (dispatch, getState) => {
+
+export const updateUserStatus = (id, updatedUser) => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
-    const requestBody = {
-      id: id.toString(),
-      status: newStatus,
-      name: newName,
-      email: newEmail,
-      contactNumber: newcontactNumber,
-    };
 
-    const response = await api.post('/user/update', requestBody, {
+    const response = await api.post('/user/update', updatedUser, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -41,27 +36,24 @@ export const updateUserStatus = (id, newStatus, newName, newEmail, newcontactNum
 
     if (response.status === 200) {
       dispatch({
-        type: "UPDATE_USER_STATUS",
+        type: "UPDATE_USER_STATUS_SUCCESS",
         payload: {
           id,
-          newStatus,
-          newName,
-          newEmail,
-          newcontactNumber,
+          ...updatedUser,
         }
-      });
+      }); 
+      await dispatch(fetchAllUsers());
+
       toast.success('User status updated successfully');
-      dispatch(fetchAllUsers());
     } else {
       toast.error('Failed to update user status');
     }
-
-    return response.data;
   } catch (error) {
-    console.error("Error updating user status:", error);
+
     toast.error('An error occurred while updating user status');
   }
 };
+
 
 export const createUser = (userData) => async (dispatch, getState) => {
   try {
@@ -77,14 +69,12 @@ export const createUser = (userData) => async (dispatch, getState) => {
         type: "CREATE_USER_SUCCESS",
         payload: response.data
       });
+
+      await dispatch(fetchAllUsers());
       toast.success('User created successfully');
-      dispatch(fetchAllUsers());
-      
     } else {
       toast.error('Failed to create user');
-    
     }
-    return response.data;
   } catch (error) {
     toast.error('An error occurred while creating user');
   }

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createUser } from '../actions/userAction';
 
-const AddUserForm = ({ createUser, addUser }) => {
-
+const AddUserForm = ({ createUser }) => {
   const [user, setUser] = useState({});
 
   const handleInputChange = (e) => {
@@ -24,38 +23,36 @@ const AddUserForm = ({ createUser, addUser }) => {
       contactNumber: user.contactNumber,
       email: user.email,
       password: user.password,
-      status: 'false',
+      status: 'true',
       role: 'user',
     };
 
-  	createUser(newUser);
-	  addUser(user);
+    createUser(newUser);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>Name: </label>
+      <label>Name:</label>
       <input type="text" name="name" value={user.name} onChange={handleInputChange} />
       <br />
-      <label>Phone: </label>
+      <label>Phone:</label>
       <input type="text" name="contactNumber" value={user.contactNumber} onChange={handleInputChange} />
       <br />
-      <label>E-mail: </label>
+      <label>E-mail:</label>
       <input type="text" name="email" value={user.email} onChange={handleInputChange} />
-      <br /><br />
-      <label>Password: </label>
+      <br />
+      <label>Password:</label>
       <input type="password" name="password" value={user.password} onChange={handleInputChange} />
-      <br /><br />
-      <button type="submit">Save & Change</button>
-      <br /><br />
+      <br />
+      <br />
+      <button>Save & Change</button>
     </form>
   );
 };
 
 const mapStateToProps = (state) => ({
-	users: state.userReducer.userList,
-
-  });
+  users: state.userReducer.userList,
+});
 
 const mapDispatchToProps = {
   createUser,
