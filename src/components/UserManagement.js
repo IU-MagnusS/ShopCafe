@@ -8,7 +8,7 @@ const UserManagement = ({ users, fetchAllUsers, updateUserStatus, createUser, fl
   
   useEffect(() => {
     fetchAllUsers();
-  }, []);
+  }, [fetchAllUsers]);
 
   useEffect(() => {
     fetchAllUsers();

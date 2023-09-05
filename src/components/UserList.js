@@ -1,120 +1,93 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { fetchAllUsers, createUser, updateUserStatus } from '../actions/userAction';
-import MUIDataTable from 'mui-datatables';
-import Modal from '@material-ui/core/Modal';
-import AddUserForm from '../forms/AddUser';
-import EditUserForm from '../forms/EditUser';
+import UserTable from './UserTable';
+import UserForm from './UserForm';
+import { toast } from 'react-toastify';
+
+function validateUserData(user) {
+    return user.name && user.name.trim() !== '';
+}
 
 const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList }) => {
     const [open, setOpen] = useState(false);
-    const [editUser, setEditUser] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
         fetchAllUsers();
-    }, []);
+    }, [fetchAllUsers]);
 
-    const handleOpen = () => {
+    const handleOpen = (action, user) => {
         setOpen(true);
+        if (action === 'edit') {
+            setSelectedUser(user);
+        } else {
+            setSelectedUser(null);
+        }
     };
 
     const handleClose = () => {
         setOpen(false);
-        setEditUser(false);
         setSelectedUser(null);
     };
 
-    // CRUD operations
-    const handleAdd = (user) => {
-        createUser(user);
-        handleClose();
-    };
-
-    const handleEdit = (user) => {
-        setSelectedUser(user);
-        setEditUser(true);
-        handleOpen();
-    };
-
-
-    const handleUpdate = (id, updatedUser) => {
-        console.log('ID:', id);
-        updateUserStatus(id, updatedUser);
-        handleClose();
-    };
-
-    const columns = [
-        { name: 'id', label: 'ID', options: { filter: false } },
-        { name: 'name', label: 'Name', options: { filter: false } },
-        { name: 'contactNumber', label: 'Phone', options: { filter: false } },
-        { name: 'email', label: 'E-mail', options: { filter: false } },
-        {
-            name: 'Edit',
-            options: {
-                filter: true,
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    return (
-                        <button
-                            onClick={() => {
-                                const rowData = { id: tableMeta.rowData[0], name: tableMeta.rowData[1], contactNumber: tableMeta.rowData[2], email: tableMeta.rowData[3] };
-                                handleEdit(rowData);
-                            }}
-                            className="button muted-button"
-                        >   
-                            Edit
-                        </button>
-                    );
-                },
-            },
+    const handleAdd = useCallback(
+        async (user) => {
+            if (validateUserData(user)) {
+                try {
+                    await createUser(user);
+                    handleClose();
+                } catch (error) {
+                    toast.error('Error Adding User');
+                }
+            } else {
+                toast.error('Please enter a valid name');
+            }
         },
-    ];
-    const options = {
-        filter: true,
-        filterType: "dropdown",
-        responsive: ""
-    };
+        [createUser]
+    );
+
+    const handleEdit = useCallback(
+        (user) => {
+            handleOpen('edit', user);
+        },
+        [handleOpen]
+    );
+
+
+    const handleUpdate = useCallback(
+        async (id, updatedUser) => {
+            if (validateUserData(updatedUser)) {
+                try {
+                    await updateUserStatus(id, updatedUser);
+                    handleClose();
+                } catch (error) {
+                    toast.error('Error Updating User');
+                }
+            } else {
+                toast.error('Please enter a valid name');
+            }
+        },
+        [updateUserStatus]
+    );
 
     return (
         <div>
-            <button type="button" onClick={handleOpen} className="adduser">
+            <button type="button" onClick={() => handleOpen('add')} className="button">
                 Add User
             </button>
 
-            {userList.length > 0 && (
-                <MUIDataTable
-                    title={'Data'}
-                    data={userList}
-                    columns={columns}
-                    options={options}
+            {userList.length > 0 && <UserTable userList={userList} onEdit={handleEdit} />}
 
-                />
-            )}
-
-            <Modal
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
+            <UserForm
                 open={open}
                 onClose={handleClose}
-            >
-                <div className="modal">
-                    {editUser ? (
-                        <>
-                            <h2 id="simple-modal-title">Update User</h2>
-                            <div id="simple-modal-description">
-                                <EditUserForm editing={editUser} currentUser={selectedUser} handleUpdate={handleUpdate} />
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <h2 id="simple-modal-title">Create User</h2>
-                            <div id="simple-modal-description">
-                                <AddUserForm handleAdd={handleAdd} />
-                            </div>
-                        </>
-                    )}
-                </div>
-            </Modal>
+                mode={selectedUser ? 'edit' : 'add'}
+                selectedUser={selectedUser}
+                onAdd={handleAdd}
+                onUpdate={handleUpdate}
+            />
+
         </div>
     );
 };

@@ -6,17 +6,14 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 
-const EditUserForm = ({ currentUser, handleUpdate }) => {
+const EditUserForm = ({ currentUser, handleUpdate, handleClose }) => {
   const [user, setUser] = useState(currentUser);
   const [isModalOpen, setIsModalOpen] = useState(true);
+  
 
   useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false); 
-  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -30,7 +27,6 @@ const EditUserForm = ({ currentUser, handleUpdate }) => {
       return;
     }
     handleUpdate(user.id, user);
-    
   };
 
   const isValidEmail = (email) => {
@@ -40,35 +36,37 @@ const EditUserForm = ({ currentUser, handleUpdate }) => {
 
   return (
     isModalOpen && (
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name" style={{ textAlign: "left" }}>Name:</label>
-        <input type="text" name="name" value={user.name} onChange={handleInputChange} />
-        <br />
-        <label htmlFor="contactNumber" style={{ textAlign: "left" }}>Phone:</label>
-        <input type="text" name="contactNumber" value={user.contactNumber} onChange={handleInputChange} />
-        <br />
-        <label htmlFor="email" style={{ textAlign: "left" }}>E-mail:</label>
-        <input type="text" name="email" value={user.email} onChange={handleInputChange} />
-        <br />
-        <br />
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<SaveIcon />}
-          style={{ marginRight: "10px" }}
-          onClick={handleSubmit}
-        >
-          Save & Change
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          startIcon={<CloseIcon />}
-          onClick={handleCloseModal}
-        >
-          Exit
-        </Button>
-      </form>
+      <div>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="name" style={{ textAlign: "left" }}>Name:</label>
+          <input type="text" name="name" value={user.name} onChange={handleInputChange} />
+          <br />
+          <label htmlFor="contactNumber" style={{ textAlign: "left" }}>Phone:</label>
+          <input type="text" name="contactNumber" value={user.contactNumber} onChange={handleInputChange} />
+          <br />
+          <label htmlFor="email" style={{ textAlign: "left" }}>E-mail:</label>
+          <input type="text" name="email" value={user.email} onChange={handleInputChange} />
+          <br />
+          <br />
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<SaveIcon />}
+            style={{ marginRight: '10px' }}
+            onClick={handleSubmit}
+          >
+            Save & Change
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<CloseIcon />}
+            onClick={handleClose}
+          >
+            Exit
+          </Button>
+        </form>
+      </div>
     )
   );
 };

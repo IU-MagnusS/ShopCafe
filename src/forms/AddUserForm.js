@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createUser } from '../actions/userAction';
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@material-ui/icons/Close';
 
-const AddUserForm = ({ createUser }) => {
+const AddUserForm = ({ createUser, handleClose }) => {
   const [user, setUser] = useState({});
 
   const handleInputChange = (e) => {
@@ -45,7 +48,25 @@ const AddUserForm = ({ createUser }) => {
       <input type="password" name="password" value={user.password} onChange={handleInputChange} />
       <br />
       <br />
-      <button>Save & Change</button>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<SaveIcon />}
+        style={{ marginRight: '10px' }}
+        onClick={handleSubmit}
+      >
+        Save & Change
+      </Button>
+
+      <Button
+        variant="contained"
+        color="secondary"
+        startIcon={<CloseIcon />}
+        onClick={handleClose}
+      >
+        Exit
+      </Button>
+
     </form>
   );
 };
