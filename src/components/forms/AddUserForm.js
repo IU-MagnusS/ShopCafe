@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { createUser } from '../actions/userAction';
+import { createUser } from '../../actions/userAction';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@material-ui/icons/Close';

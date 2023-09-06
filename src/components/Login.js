@@ -1,42 +1,114 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { connect } from 'react-redux'; 
-import { login }  from '../actions/auth';
-import LoginForm from "./LoginForm";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { login } from '../actions/auth';
 import { SubmissionError } from 'redux-form';
+import { Container, CssBaseline, Avatar, Typography, Box, TextField, FormControlLabel, Checkbox, Button, Grid, Link } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-const Login = ({ login }) => { 
-    const navigate = useNavigate();
-    
-    const handleSubmit = (values) => {
-        return login({ email: values.email, password: values.password })
-            .then(response => {
-                if (!(response && response.token)) {
-                    throw new SubmissionError({
-                        _error: 'Invalid email or password'
-                    });
-                }
-                
-                navigate("/dashboard");
-            })
-            .catch(error => {
-                throw new SubmissionError({
-                    _error: 'Email or Password is not correct!'
-                });
+const defaultTheme = createTheme();
+
+const SignIn = ({ login, error }) => {
+    const [formData, setFormData] = useState({ email: '', password: '' });
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const { email, password } = formData;
+
+        try {
+            await login({ email, password });
+        } catch (error) {
+            throw new SubmissionError({
+                _error: 'Invalid email or password',
             });
+        }
+    };
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
     };
 
     return (
-        <div className="auth-form-container">
-            <h2> Login </h2>
-            <LoginForm onSubmit={handleSubmit} />
-            <button className="link-btn" onClick={() => navigate("/register")}>
-                Don't have an account? Register here.
-            </button>
-        </div>
+        <ThemeProvider theme={defaultTheme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                            onChange={handleInputChange}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            onChange={handleInputChange}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox value="remember" color="primary" />}
+                            label="Remember me"
+                        />
+                        {error && <Typography color="error">{error}</Typography>}
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Sign In
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>
+            </Container>
+        </ThemeProvider>
     );
-};
+}
 
-const mapActionsToProps = { login }; 
+const mapStateToProps = (state) => ({
+    error: state.authReducer.error, 
+});
 
-export default connect(null, mapActionsToProps)(Login);
+const mapActionsToProps = { login };
+
+export default connect(mapStateToProps, mapActionsToProps)(SignIn);

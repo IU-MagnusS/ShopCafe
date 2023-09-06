@@ -44,7 +44,7 @@ const Dashboard = ({ logout }) => {
             'aria-labelledby': 'dashboard-menu-button',
           }}
         >
-          <MenuItem component={Link} to="/usermanagement">User Management</MenuItem>
+          <MenuItem component={Link} to="/data">User Management</MenuItem>
           <MenuItem onClick={handleClose}>My account</MenuItem>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>

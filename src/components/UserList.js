@@ -4,6 +4,7 @@ import { fetchAllUsers, createUser, updateUserStatus } from '../actions/userActi
 import UserTable from './UserTable';
 import UserForm from './UserForm';
 import { toast } from 'react-toastify';
+import './forms/UserList.css';
 
 function validateUserData(user) {
     return user.name && user.name.trim() !== '';

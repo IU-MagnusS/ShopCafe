@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { updateUserStatus } from '../actions/userAction';
+import { updateUserStatus } from '../../actions/userAction';
 import { toast } from 'react-toastify';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
