@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
 import { SubmissionError } from 'redux-form';
-import { Container, CssBaseline, Avatar, Typography, Box, TextField, FormControlLabel, Checkbox, Button, Grid, Link } from '@mui/material';
+import { Container, CssBaseline, Avatar, Typography, Box, TextField, FormControlLabel, Checkbox, Button, Grid, Link as MUILink } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Link as RouterLink } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
 const SignIn = ({ login, error }) => {
-    const [formData, setFormData] = useState({ email: '', password: '' });
+    const [formData, setFormData] = useState();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -88,14 +89,14 @@ const SignIn = ({ login, error }) => {
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link href="#" variant="body2">
+                                <MUILink component={RouterLink} to="/forgot-password" variant="body2">
                                     Forgot password?
-                                </Link>
+                                </MUILink>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <MUILink component={RouterLink} to="/register" variant="body2">
                                     {"Don't have an account? Sign Up"}
-                                </Link>
+                                </MUILink>
                             </Grid>
                         </Grid>
                     </Box>
@@ -106,7 +107,7 @@ const SignIn = ({ login, error }) => {
 }
 
 const mapStateToProps = (state) => ({
-    error: state.authReducer.error, 
+    error: state.authReducer.error,
 });
 
 const mapActionsToProps = { login };

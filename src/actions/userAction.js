@@ -1,6 +1,7 @@
 import api from './api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { clearErr } from './auth'
 
 export const fetchAllUsers = () => async (dispatch, getState) => {
   try {
@@ -55,10 +56,16 @@ export const updateUserStatus = (id, updatedUser) => async (dispatch, getState) 
 };
 
 
-export const createUser = (userData) => async (dispatch, getState) => {
+export const createUser = (userData, isAdmin = false) => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
-    const response = await api.post('/user/signup', userData, {
+
+    const role = isAdmin ? 'user' : 'admin';
+    const status = isAdmin ? false : true;
+
+    const userDataWithRoleAndStatus = { ...userData, role, status };
+
+    const response = await api.post('/user/signup', userDataWithRoleAndStatus, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -70,8 +77,11 @@ export const createUser = (userData) => async (dispatch, getState) => {
         payload: response.data
       });
 
-      await dispatch(fetchAllUsers());
       toast.success('User created successfully');
+
+      if (!isAdmin) {
+        await dispatch(fetchAllUsers());
+      }
     } else {
       toast.error('Failed to create user');
     }
@@ -79,3 +89,4 @@ export const createUser = (userData) => async (dispatch, getState) => {
     toast.error('An error occurred while creating user');
   }
 };
+

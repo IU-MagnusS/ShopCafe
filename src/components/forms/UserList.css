@@ -1,18 +1,4 @@
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-      "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-      monospace;
-}
-
-.modal {
+.user-list .modal {
     width: 440px;
     background-color: white;
     border: 2px solid #000;
@@ -24,7 +10,7 @@ code {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
-.button {
+.user-list .button {
     margin: 10px;
     padding: 12px 24px; 
     border-radius: 5px;
@@ -35,24 +21,23 @@ code {
     display: flex;
     align-items: center;
     transition: background-color 0.3s; 
-    
 }
 
-.button:hover {
+.user-list .button:hover {
     background-color: #0069d9; 
 }
 
-.button:active {
+.user-list .button:active {
     padding: 12px 24px; 
 }
 
-.button-icon {
+.user-list .button-icon {
     margin-right: 5px;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+.user-list input[type="text"],
+.user-list input[type="email"],
+.user-list input[type="password"] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -62,30 +47,30 @@ input[type="password"] {
     font-size: 16px;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
+.user-list label {
+    display:block;
+    margin-bottom:5px;
 }
 
-@media (max-width: 740px) {
-    .modal {
-        width: 80%;
-        border-radius: 10px;
-    }
-    .MuiPaper-root {
-        height: 100%;
-        overflow: auto;
-        max-height: 499px;
-        overflow-x: auto;
-    }
+@media (max-width:740px) {
+   .user-list .modal {
+        width:80%;
+        border-radius:10px;
+   }
+   .user-list .MuiPaper-root {
+        height:100%;
+        overflow:auto;
+        max-height:499px;
+        overflow-x:auto;
+   }
 }
 
-.large-button {
-    padding: 15px 30px;
-    font-size: 16px;
+.user-list .large-button {
+   padding :15px30px ;
+   font-size :16px ;
 }
 
-.red-button {
-    background-color: red;
-    color: white;
+.user-list .red-button {
+   background-color:red ;
+   color:white ;
 }

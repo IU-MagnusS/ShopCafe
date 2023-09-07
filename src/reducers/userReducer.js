@@ -27,11 +27,17 @@ const userReducer = (state = initialState, action) => {
         ...state,
         userList: updatedUserList,
       };
-    case 'CREATE_USER_SUCCESS':
-      return {
-        ...state,
-        userList: [...state.userList, action.payload.newUser],
-      };
+      case 'CREATE_USER_SUCCESS':
+        const newUser = {
+          ...action.payload.newUser,
+          role: 'admin',
+          status: true,
+        };
+        return {
+          ...state,
+          userList: [...state.userList, newUser],
+        };
+      
 
 
     default:

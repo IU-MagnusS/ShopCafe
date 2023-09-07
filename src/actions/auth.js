@@ -29,6 +29,7 @@ export const login = ({ email, password }) => async (dispatch) => {
         console.log(response);
     } catch (error) {
         dispatch(loginFailure("Invalid email or password"));
+        
     }
 };
 

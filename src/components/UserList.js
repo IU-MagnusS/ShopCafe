@@ -18,21 +18,22 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList }) => 
         fetchAllUsers();
     }, [fetchAllUsers]);
 
-    const handleOpen = (action, user) => {
+    const handleOpen = useCallback((action, user) => {
         setOpen(true);
         if (action === 'edit') {
             setSelectedUser(user);
         } else {
             setSelectedUser(null);
         }
-    };
+    }, []);
+    
 
     const handleClose = () => {
         setOpen(false);
         setSelectedUser(null);
     };
 
-    const handleAdd = useCallback(
+    const handleAdd = useCallback(  // store func between render, return a stored version of callback func only changes when one of the dependencies changes 
         async (user) => {
             if (validateUserData(user)) {
                 try {
@@ -73,7 +74,7 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList }) => 
     );
 
     return (
-        <div>
+        <div className="user-list">
             <button type="button" onClick={() => handleOpen('add')} className="button">
                 Add User
             </button>
