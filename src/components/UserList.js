@@ -10,13 +10,16 @@ function validateUserData(user) {
     return user.name && user.name.trim() !== '';
 }
 
-const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList }) => {
+const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList, isCreateSuccess }) => {
     const [open, setOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
         fetchAllUsers();
-    }, [fetchAllUsers]);
+        if (isCreateSuccess) {
+            handleClose();
+        }
+    }, [isCreateSuccess]);
 
     const handleOpen = (action, user) => {
         setOpen(true);
@@ -26,8 +29,6 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList }) => 
             setSelectedUser(null);
         }
     };
-    
-    
 
     const handleClose = () => {
         setOpen(false);
@@ -97,6 +98,7 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList }) => 
 
 const mapStateToProps = (state) => ({
     userList: state.userReducer.userList,
+    isCreateSuccess: state.userReducer.isCreateSuccess,
 });
 
 const mapDispatchToProps = {

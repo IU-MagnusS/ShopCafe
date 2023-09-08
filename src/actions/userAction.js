@@ -2,6 +2,10 @@ import api from './api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+export const createUserSuccess = (newUser) => ({
+  type: 'CREATE_USER_SUCCESS',
+  payload: newUser,
+});
 
 export const fetchAllUsers = () => async (dispatch, getState) => {
   try {
@@ -37,17 +41,15 @@ export const updateUserStatus = (id, updatedUser) => async (dispatch, getState) 
 
     if (response.status === 200) {
       dispatch({
-        type: 'UPDATE_USER_SUCCESS',
+        type: 'UPDATE_USER_STATUS_SUCCESS',
         payload: response.data,
       });
-      await dispatch(fetchAllUsers());
-
       toast.success('User status updated successfully');
+      await dispatch(fetchAllUsers());
     } else {
       toast.error('Failed to update user status');
     }
   } catch (error) {
-
     toast.error('An error occurred while updating user status');
   }
 };
@@ -71,16 +73,8 @@ export const createUser = (userData, isAdmin = false) => async (dispatch, getSta
     });
 
     if (response.status === 200) {
-      dispatch({
-        type: "CREATE_USER_SUCCESS",
-        payload: response.data
-      });
-
-      toast.success('User created successfully');
-
-      if (!isAdmin) {
-        await dispatch(fetchAllUsers());
-      }
+      dispatch(createUserSuccess(response.data));
+      toast.success('Create new user successfully')
     } else {
       toast.error('Failed to create user');
     }

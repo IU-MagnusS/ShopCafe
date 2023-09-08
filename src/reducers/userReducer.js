@@ -1,15 +1,15 @@
 
 const initialState = {
   userList: [],
-  updatedUserData: null,
+  isCreateSuccess: false,
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'UPDATE_USER_SUCCESS':
+    case 'CREATE_USER_SUCCESS':
       return {
         ...state,
-        updatedUserData: action.payload, 
+        isCreateSuccess: true, 
       };
     case 'SET_USER_LIST':
       return {
@@ -34,14 +34,9 @@ const userReducer = (state = initialState, action) => {
         userList: updatedUserList,
       };
       case 'CREATE_USER_SUCCESS':
-        const newUser = {
-          ...action.payload.newUser,
-          role: 'admin',
-          status: true,
-        };
         return {
           ...state,
-          userList: [...state.userList, newUser],
+          userList: [...state.userList, action.payload.newUser],
         };
       
 
