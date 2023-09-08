@@ -18,14 +18,15 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList }) => 
         fetchAllUsers();
     }, [fetchAllUsers]);
 
-    const handleOpen = useCallback((action, user) => {
+    const handleOpen = (action, user) => {
         setOpen(true);
         if (action === 'edit') {
             setSelectedUser(user);
         } else {
             setSelectedUser(null);
         }
-    }, []);
+    };
+    
     
 
     const handleClose = () => {

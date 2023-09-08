@@ -26,8 +26,7 @@ const AddUserForm = ({ createUser, handleClose }) => {
       contactNumber: user.contactNumber,
       email: user.email,
       password: user.password,
-      status: 'true',
-      role: 'user',
+      
     };
 
     createUser(newUser);

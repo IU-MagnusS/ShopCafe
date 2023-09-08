@@ -11,6 +11,7 @@ const UserForm = ({ open, onClose, mode, selectedUser, onAdd, onUpdate }) => {
       open={open}
       onClose={onClose}
     >
+    <div className="user-list">
       <div className="modal">
         {mode === 'edit' ? (
           <>
@@ -28,6 +29,7 @@ const UserForm = ({ open, onClose, mode, selectedUser, onAdd, onUpdate }) => {
           </>
         )}
       </div>
+    </div>
     </Modal>
   );
 };

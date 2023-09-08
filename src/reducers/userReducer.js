@@ -1,10 +1,16 @@
 
 const initialState = {
   userList: [],
+  updatedUserData: null,
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'UPDATE_USER_SUCCESS':
+      return {
+        ...state,
+        updatedUserData: action.payload, 
+      };
     case 'SET_USER_LIST':
       return {
         ...state,

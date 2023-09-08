@@ -1,7 +1,7 @@
 import api from './api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { clearErr } from './auth'
+
 
 export const fetchAllUsers = () => async (dispatch, getState) => {
   try {
@@ -37,12 +37,9 @@ export const updateUserStatus = (id, updatedUser) => async (dispatch, getState) 
 
     if (response.status === 200) {
       dispatch({
-        type: "UPDATE_USER_STATUS_SUCCESS",
-        payload: {
-          id,
-          ...updatedUser,
-        }
-      }); 
+        type: 'UPDATE_USER_SUCCESS',
+        payload: response.data,
+      });
       await dispatch(fetchAllUsers());
 
       toast.success('User status updated successfully');
@@ -59,11 +56,13 @@ export const updateUserStatus = (id, updatedUser) => async (dispatch, getState) 
 export const createUser = (userData, isAdmin = false) => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
-
     const role = isAdmin ? 'user' : 'admin';
     const status = isAdmin ? false : true;
-
-    const userDataWithRoleAndStatus = { ...userData, role, status };
+    const userDataWithRoleAndStatus = { 
+      ...userData,
+       role, 
+       status
+       };
 
     const response = await api.post('/user/signup', userDataWithRoleAndStatus, {
       headers: {
