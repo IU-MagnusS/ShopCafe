@@ -2,6 +2,7 @@
 const initialState = {
   userList: [],
   isCreateSuccess: false,
+  isUpdateSuccess: false,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -16,30 +17,13 @@ const userReducer = (state = initialState, action) => {
         ...state,
         userList: action.payload,
       };
-    case 'UPDATE_USER_STATUS_SUCCESS':
-      const updatedUserList = state.userList.map(user => {
-        if (user.id === action.payload.id) {
-          return {
-            ...user,
-            status: action.payload.newStatus,
-            name: action.payload.newName, 
-            email: action.payload.newEmail, 
-            contactNumber: action.payload.newcontactNumber,
-          };
-        }
-        return user;
-      });
-      return {
-        ...state,
-        userList: updatedUserList,
-      };
-      case 'CREATE_USER_SUCCESS':
+      case 'UPDATE_USER_SUCCESS':
         return {
           ...state,
-          userList: [...state.userList, action.payload.newUser],
+          isUpdateSuccess: true, 
         };
+    
       
-
 
     default:
       return state;

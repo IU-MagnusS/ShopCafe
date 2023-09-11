@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { fetchAllUsers, createUser, updateUserStatus } from '../actions/userAction';
 import UserTable from './UserTable';
 import UserForm from './UserForm';
+import HomeIcon from '@mui/icons-material/Home';
+import IconButton from '@mui/material/IconButton';
 import { toast } from 'react-toastify';
 import './forms/UserList.css';
 
@@ -10,16 +12,16 @@ function validateUserData(user) {
     return user.name && user.name.trim() !== '';
 }
 
-const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList, isCreateSuccess }) => {
+const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList, isCreateSuccess, isUpdateSuccess }) => {
     const [open, setOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
         fetchAllUsers();
-        if (isCreateSuccess) {
+        if (isCreateSuccess || isUpdateSuccess) {
             handleClose();
         }
-    }, [isCreateSuccess]);
+    }, [isCreateSuccess, isUpdateSuccess]);
 
     const handleOpen = (action, user) => {
         setOpen(true);
@@ -35,7 +37,7 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList, isCre
         setSelectedUser(null);
     };
 
-    const handleAdd = useCallback(  // store func between render, return a stored version of callback func only changes when one of the dependencies changes 
+    const handleAdd = useCallback(
         async (user) => {
             if (validateUserData(user)) {
                 try {
@@ -58,7 +60,6 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList, isCre
         [handleOpen]
     );
 
-
     const handleUpdate = useCallback(
         async (id, updatedUser) => {
             if (validateUserData(updatedUser)) {
@@ -75,10 +76,24 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList, isCre
         [updateUserStatus]
     );
 
+    const handleHomeClick = () => {
+        window.location.href = '/';
+    };
+
     return (
         <div className="user-list">
+            <div className="home-button">
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    aria-label="home"
+                    onClick={handleHomeClick}
+                >
+                    <HomeIcon />
+                </IconButton>
+            </div>
             <button type="button" onClick={() => handleOpen('add')} className="button">
-                Add User
+                New User
             </button>
 
             {userList.length > 0 && <UserTable userList={userList} onEdit={handleEdit} />}
@@ -91,7 +106,6 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList, isCre
                 onAdd={handleAdd}
                 onUpdate={handleUpdate}
             />
-
         </div>
     );
 };
@@ -99,6 +113,7 @@ const UserList = ({ fetchAllUsers, createUser, updateUserStatus, userList, isCre
 const mapStateToProps = (state) => ({
     userList: state.userReducer.userList,
     isCreateSuccess: state.userReducer.isCreateSuccess,
+    isUpdateSuccess: state.userReducer.isUpdateSuccess,
 });
 
 const mapDispatchToProps = {

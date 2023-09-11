@@ -1,14 +1,15 @@
+
 .user-list .modal {
     width: 440px;
-    background-color: white;
-    border: 2px solid #000;
+    background-color: #f0f0f0;
+    border-radius: 10px; 
     padding: 16px 32px 24px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2); 
+    transition : all .3s ease-in-out ;
 }
 
 .user-list .button {
@@ -26,10 +27,7 @@
 
 .user-list .button:hover {
     background-color: #0069d9; 
-}
-
-.user-list .button:active {
-    padding: 12px 24px; 
+    transform : scale(1.05) ;
 }
 
 .user-list .button-icon {
@@ -74,4 +72,10 @@
 .user-list .red-button {
    background-color:red ;
    color:white ;
+}
+
+.user-list .home-button {
+    
+    margin-right: 10px;
+
 }
