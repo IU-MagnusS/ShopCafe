@@ -41,7 +41,7 @@ export const updateUserStatus = (id, updatedUser) => async (dispatch, getState) 
 
     if (response.status === 200) {
       dispatch({
-        type: 'UPDATE_USER_STATUS_SUCCESS',
+        type: 'UPDATE_USER_SUCCESS',
         payload: response.data,
       });
       toast.success('User status updated successfully');
