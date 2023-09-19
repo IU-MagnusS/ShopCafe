@@ -7,6 +7,16 @@ export const createUserSuccess = (newUser) => ({
   payload: newUser,
 });
 
+export const deleteUserSuccess = (deletedUserId) => ({
+  type: 'DELETE_USER_SUCCESS',
+  payload: deletedUserId,
+});
+
+export const deleteUserFailure = (error) => ({
+  type: 'DELETE_USER_FAILURE',
+  payload: error,
+});
+
 export const fetchAllUsers = () => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
@@ -83,3 +93,20 @@ export const createUser = (userData, isAdmin = false) => async (dispatch, getSta
   }
 };
 
+export const deleteUser = (userId) => async (dispatch, getState) => {
+  try {
+    const { token } = getState().authReducer;
+    const response = await api.delete(`/user/delete/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status === 200) {
+      dispatch(deleteUserSuccess(userId));
+    } else {
+      dispatch(deleteUserFailure('Failed to delete user'));
+    }
+  } catch (error) {
+    dispatch(deleteUserFailure('An error occurred while deleting user'));
+  }
+};
