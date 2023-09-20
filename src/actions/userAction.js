@@ -96,7 +96,7 @@ export const createUser = (userData, isAdmin = false) => async (dispatch, getSta
 export const deleteUser = (userId) => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
-    const response = await api.delete(`/user/delete/${userId}`, {
+    const response = await api.delete(`/user/delete`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

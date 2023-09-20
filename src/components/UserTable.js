@@ -1,13 +1,11 @@
 import React from 'react';
 import MUIDataTable from 'mui-datatables';
-import { useDispatch } from 'react-redux'; // Import useDispatch từ Redux
-import { deleteUser } from '../actions/userAction'; // Import action creator để xóa người dùng
-import { Toolbar, IconButton, Tooltip } from '@mui/material'; // Import các thành phần Material-UI cần thiết
+import { connect } from 'react-redux';
+import { deleteUser } from '../actions/userAction';
+import { Toolbar, IconButton, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const UserTable = ({ userList, onEdit }) => {
-  const dispatch = useDispatch(); // Sử dụng useDispatch để gọi action
-
+const UserTable = ({ userList, onEdit, deleteUser }) => {
   const columns = [
     { name: 'id', label: 'ID', options: { filter: false } },
     { name: 'name', label: 'Name', options: { filter: false } },
@@ -46,12 +44,12 @@ const UserTable = ({ userList, onEdit }) => {
     customToolbarSelect: (selectedRows, displayData, setSelectedRows) => (
       <CustomToolbarDelete
         selectedRows={selectedRows}
-        onHandleDelete={() => handleDelete(selectedRows)}
+        onDelete={deleteSelectedUsers}
       />
     ),
   };
 
-  const handleDelete = (selectedRows) => {
+  const deleteSelectedUsers = (selectedRows) => {
     if (selectedRows.data.length === 0) {
       return;
     }
@@ -60,17 +58,16 @@ const UserTable = ({ userList, onEdit }) => {
       (row) => userList[row.dataIndex].id
     );
 
-    // Gọi action creator để xóa người dùng
     selectedUserIds.forEach((userId) => {
-      dispatch(deleteUser(userId));
+      deleteUser(userId);
     });
   };
 
-  const CustomToolbarDelete = ({ selectedRows, onHandleDelete }) => {
+  const CustomToolbarDelete = ({ selectedRows, onDelete }) => {
     return (
       <Toolbar>
         <Tooltip title={'Delete'}>
-          <IconButton onClick={onHandleDelete}>
+          <IconButton onClick={() => onDelete(selectedRows)}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -88,4 +85,12 @@ const UserTable = ({ userList, onEdit }) => {
   );
 };
 
-export default UserTable;
+const mapStateToProps = (state) => ({
+  userList: state.userReducer.userList,
+});
+
+const mapDispatchToProps = {
+  deleteUser, 
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserTable);
