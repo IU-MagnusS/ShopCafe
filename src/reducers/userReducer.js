@@ -3,6 +3,7 @@ const initialState = {
   userList: [],
   isCreateSuccess: false,
   isUpdateSuccess: false,
+  isDeleteSuccess: false,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -23,11 +24,9 @@ const userReducer = (state = initialState, action) => {
         isUpdateSuccess: true,
       };
     case 'DELETE_USER_SUCCESS':
-      const deletedUserId = action.payload;
-      const updatedUserList = state.userList.filter((user) => user.id !== deletedUserId);
       return {
         ...state,
-        userList: updatedUserList,
+        isDeleteSuccess: true,
       };
     default:
       return state;

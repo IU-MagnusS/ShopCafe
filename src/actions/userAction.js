@@ -39,7 +39,7 @@ export const fetchAllUsers = () => async (dispatch, getState) => {
 };
 
 
-export const updateUserStatus = (id, updatedUser) => async (dispatch, getState) => {
+export const updateUserStatus = (updatedUser) => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
 
@@ -93,20 +93,28 @@ export const createUser = (userData, isAdmin = false) => async (dispatch, getSta
   }
 };
 
-export const deleteUser = (userId) => async (dispatch, getState) => {
+export const deleteUser = (selectedUserIds) => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
-    const response = await api.delete(`/user/delete`, {
+    const selectedUserIds = [1];
+    const response = await api.post(`/user/delete`, JSON.stringify(selectedUserIds), {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
+    
     if (response.status === 200) {
-      dispatch(deleteUserSuccess(userId));
+      dispatch({
+        type: 'DELETE_USER_SUCCESS',
+        payload: response.data,
+      });
+      toast.success('User deleted successfully');
+      
     } else {
-      dispatch(deleteUserFailure('Failed to delete user'));
+      toast.error('Failed to delete user ');
     }
   } catch (error) {
-    dispatch(deleteUserFailure('An error occurred while deleting user'));
+    toast.error('An error occurred while deleting user ');
   }
 };

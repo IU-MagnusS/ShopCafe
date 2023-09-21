@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MUIDataTable from 'mui-datatables';
 import { connect } from 'react-redux';
 import { deleteUser } from '../actions/userAction';
@@ -6,6 +6,8 @@ import { Toolbar, IconButton, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const UserTable = ({ userList, onEdit, deleteUser }) => {
+  const [deletedUserIds, setDeletedUserIds] = useState([]);
+
   const columns = [
     { name: 'id', label: 'ID', options: { filter: false } },
     { name: 'name', label: 'Name', options: { filter: false } },
@@ -59,7 +61,18 @@ const UserTable = ({ userList, onEdit, deleteUser }) => {
     );
 
     selectedUserIds.forEach((userId) => {
-      deleteUser(userId);
+      // Gọi API Delete ở phía Backend
+      deleteUser(userId)
+        .then(() => {
+          // Cập nhật trạng thái của component để xóa người dùng khỏi danh sách
+          setDeletedUserIds((prevDeletedUserIds) => [
+            ...prevDeletedUserIds,
+            userId,
+          ]);
+        })
+        .catch((error) => {
+          console.error('Error deleting user:', error);
+        });
     });
   };
 
@@ -75,10 +88,15 @@ const UserTable = ({ userList, onEdit, deleteUser }) => {
     );
   };
 
+  // Lọc danh sách người dùng để ẩn người dùng đã xóa
+  const filteredUserList = userList.filter(
+    (user) => !deletedUserIds.includes(user.id)
+  );
+
   return (
     <MUIDataTable
       title={'Data'}
-      data={userList}
+      data={filteredUserList}
       columns={columns}
       options={options}
     />
@@ -90,7 +108,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  deleteUser, 
+  deleteUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserTable);
