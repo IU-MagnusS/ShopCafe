@@ -92,29 +92,28 @@ export const createUser = (userData, isAdmin = false) => async (dispatch, getSta
     toast.error('An error occurred while creating user');
   }
 };
-
 export const deleteUser = (selectedUserIds) => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
-    const selectedUserIds = [1];
-    const response = await api.post(`/user/delete`, JSON.stringify(selectedUserIds), {
+
+    const response = await api.post(`/user/delete`, { userIds: JSON.stringify(selectedUserIds) }, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
-    
+
     if (response.status === 200) {
       dispatch({
         type: 'DELETE_USER_SUCCESS',
         payload: response.data,
       });
-      toast.success('User deleted successfully');
-      
+      toast.success('User(s) deleted successfully');
+      await dispatch(fetchAllUsers());
     } else {
-      toast.error('Failed to delete user ');
+      toast.error('Failed to delete user(s)');
     }
   } catch (error) {
-    toast.error('An error occurred while deleting user ');
+    toast.error('An error occurred while deleting user(s)');
   }
 };
