@@ -96,7 +96,9 @@ export const deleteUser = (selectedUserIds) => async (dispatch, getState) => {
   try {
     const { token } = getState().authReducer;
 
-    const response = await api.post(`/user/delete`, { userIds: JSON.stringify(selectedUserIds) }, {
+    const userIdsArray = Array.isArray(selectedUserIds) ? selectedUserIds : [selectedUserIds];
+    
+    const response = await api.post(`/user/delete`, userIdsArray, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -117,3 +119,4 @@ export const deleteUser = (selectedUserIds) => async (dispatch, getState) => {
     toast.error('An error occurred while deleting user(s)');
   }
 };
+
